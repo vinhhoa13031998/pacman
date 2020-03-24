@@ -4,7 +4,7 @@
 #include <list>
 using namespace std;
 
-typedef enum {VIDE, MUR, GOMME, PORTE} Case;
+typedef enum {VIDE, MUR, GOMME, PORTE, BONUS} Case;
 typedef enum {GAUCHE, DROITE, HAUT, BAS} Direction;
 typedef enum {EASY,HARD} NiveauDif;
 
@@ -31,8 +31,9 @@ class Jeu
     int largeur, hauteur; // Nombre de cases en largeur et en hauteur
     int posPacmanX, posPacmanY;
     int NbGomme;          // Nombre de gommes dans la terrain
-    int PointVie;         // Nombre de Vie
+    int PointVie;         // Point de Vie
     NiveauDif niveau;     // Niveau du jeu
+
   public:
     list<Fantome> fantomes;
 
@@ -54,14 +55,14 @@ class Jeu
     int getPacmanX() const;
     int getPacmanY() const;
 
-    // Retourne la case à une position donnée
+    // Retourne la case Ã  une position donnÃ©e
     Case getCase(int, int) const;
 
-    // Indique si la case à une position donnée existe et est vide
+    // Indique si la case Ã  une position donnÃ©e existe et est vide
     // (Pacman ou les fantomes peuvent l'occuper)
     bool posValide(int, int) const;
 
-    // Déplace Pacman dans une direction (si la case à atteindre est valide)
+    // DÃ©place Pacman dans une direction (si la case Ã  atteindre est valide)
     bool deplacePacman(Direction);
 
     // Ajouter un fatome
@@ -73,7 +74,7 @@ class Jeu
     // Verifier les Collisions entre pacman et fantomes
     bool Verifier_collisions();
 
-    // Handle Collisions entre pacman et fantomes
+    // Collisions entre pacman et fantomes
     void Handle_collisions();
 
     // Get Point de Vie
@@ -81,6 +82,9 @@ class Jeu
 
     // Set Point de Vie
     void Set_PointVie(const int);
+
+    // Bonus point de Vie
+    void Handle_Bonus();
 
     // Verifier Gagner
     bool Verifier_Gagner();
