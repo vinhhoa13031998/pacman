@@ -49,6 +49,11 @@ PacmanWindow::PacmanWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pPare
         cout<<"Impossible d'ouvrir coeur.bmp"<<endl;
         exit(-1);
     }
+    if (pixmapBonus.load("./data/bonus.bmp")==false)
+    {
+        cout<<"Impossible d'ouvrir bonus.bmp"<<endl;
+        exit(-1);
+    }
 
     // Ajouter le button "AJOUTER FANTOME"
     PacmanButton *btA = new PacmanButton("Ajouter fantome",this);
@@ -58,7 +63,7 @@ PacmanWindow::PacmanWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pPare
     // Ajouter le button "Supprimer FANTOME"
     PacmanButton *btS = new PacmanButton("Supprimer fantome",this);
     connect(btS,PacmanButton::clicked, this, PacmanWindow::Supprimer_Button);
-    btS->setGeometry(200,10,130,40);
+    btS->setGeometry(150,10,130,40);
 
     Niveau_Jeu();
 
@@ -97,7 +102,8 @@ void PacmanWindow::paintEvent(QPaintEvent *)
                 painter.drawPixmap(x*largeurCase, y*hauteurCase, pixmapGomme);
             else if(jeu.getCase(x,y) == PORTE)
                 painter.drawPixmap(x*largeurCase, y*hauteurCase, pixmapPorte);
-
+            else if(jeu.getCase(x,y) == BONUS)
+                painter.drawPixmap(x*largeurCase, y*hauteurCase, pixmapBonus);
     // Dessine les fantomes
     for (itFantome=jeu.fantomes.begin(); itFantome!=jeu.fantomes.end(); itFantome++)
         {painter.drawPixmap(itFantome->getPosX()*largeurCase, itFantome->getPosY()*hauteurCase, pixmapFantome);}
@@ -108,7 +114,7 @@ void PacmanWindow::paintEvent(QPaintEvent *)
 	// Dessine PointdeVie
 	for (int i =1; i <= jeu.Get_PointVie();i++)
     {
-        painter.drawPixmap(500+(i-1)*40,10,40,35,pixmapPointVie);
+        painter.drawPixmap(350+(i-1)*40,10,40,35,pixmapPointVie);
     }
 
 }
@@ -133,6 +139,7 @@ void PacmanWindow::handleTimer()
     Handle_Gagner_MSG();
     jeu.Handle_collisions();
     jeu.Handle_Gomme();
+    jeu.Handle_Bonus();
     update();
 }
 
