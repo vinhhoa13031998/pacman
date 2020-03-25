@@ -65,15 +65,11 @@ PacmanWindow::PacmanWindow(QWidget *pParent, Qt::WindowFlags flags):QFrame(pPare
     connect(btS,PacmanButton::clicked, this, PacmanWindow::Supprimer_Button);
     btS->setGeometry(150,10,130,40);
 
-    Niveau_Jeu();
-
     jeu.init();
 
     QTimer *timer = new QTimer(this);
     connect(timer, QTimer::timeout, this, PacmanWindow::handleTimer);
-    if (jeu.Get_Niveau() == EASY)
-        {timer->start(120);}
-    else {timer->start(80);}
+    timer->start(120);
 
     largeurCase = pixmapMur.width();
     hauteurCase = pixmapMur.height();
@@ -137,6 +133,7 @@ void PacmanWindow::handleTimer()
     jeu.evolue();
     Handle_perdu_MSG();
     Handle_Gagner_MSG();
+    Handle_Continuer_MSG();
     jeu.Handle_collisions();
     jeu.Handle_Gomme();
     jeu.Handle_Bonus();
@@ -168,15 +165,9 @@ void PacmanWindow:: Button_Sortir()
 }
 
 //// Button Hard
-void PacmanWindow:: Button_Hard()
+void PacmanWindow:: Button_Continuer()
 {
-    jeu.Set_Niveau(HARD);
-}
-
-//// Button Easy
-void PacmanWindow::Button_Easy()
-{
-    jeu.Set_Niveau(EASY);
+    jeu.niveau2();
 }
 
 //// Message perdu
@@ -203,15 +194,26 @@ void PacmanWindow :: Handle_perdu_MSG()
 }
 void PacmanWindow :: Handle_Gagner_MSG()
 {
-    QString ABC;
-    string text;
     QMessageBox msg;
-    text = "Vinh Hoa";
-    ABC = QString::fromLocal8Bit(text.c_str());
-    if(jeu.Verifier_Gagner() == true)
+    if(jeu.Verifier_Gagner() == true && jeu.Get_Niveau() == EASY)
     {
-        msg.setText("Vous avez gagner, essayez-vous ?");
-        msg.setInformativeText(ABC);
+        msg.setText("Bien Joue, Continuez 'HARD-MODE' ?");
+
+        QPushButton *btn_continuer = msg.addButton("OK", QMessageBox::AcceptRole);
+        connect(btn_continuer, QPushButton::clicked, this, PacmanWindow::Button_Continuer);
+
+        QPushButton *btn_sortir = msg.addButton("Sortir", QMessageBox::AcceptRole);
+        connect(btn_sortir, QPushButton::clicked, this, PacmanWindow::Button_Sortir);
+
+        msg.exec();
+    }
+}
+void PacmanWindow :: Handle_Continuer_MSG()
+{
+    QMessageBox msg;
+    if(jeu.Verifier_Gagner() == true && jeu.Get_Niveau() == HARD)
+    {
+        msg.setText("Felicitation, Vous avez gagner ");
 
         QPushButton *btn_rejouer = msg.addButton("Rejouer", QMessageBox::AcceptRole);
         connect(btn_rejouer, QPushButton::clicked, this, PacmanWindow::Button_Rejouer);
@@ -223,16 +225,3 @@ void PacmanWindow :: Handle_Gagner_MSG()
     }
 }
 
-void PacmanWindow :: Niveau_Jeu()
-{
-    QMessageBox msg;
-    msg.setText(" Choisissez-vous le niveau du jeu");
-
-    QPushButton *btn_easy = msg.addButton("Easy", QMessageBox::AcceptRole);
-    connect(btn_easy, QPushButton::clicked, this, PacmanWindow::Button_Easy);
-
-    QPushButton *btn_hard = msg.addButton("Hard", QMessageBox::AcceptRole);
-    connect(btn_hard, QPushButton::clicked, this, PacmanWindow::Button_Hard);
-
-    msg.exec();
-}
