@@ -34,30 +34,39 @@ Jeu::~Jeu()
         delete[] terrain;
 }
 
-bool Jeu::init()
+void Jeu::set_Largeur(const int l)
+{
+    largeur = l;
+}
+
+void Jeu::set_Hauteur(const int h)
+{
+    hauteur = h;
+}
+
+bool Jeu::init()             // Niveau 1
 {
 	int x, y;
 	Set_PointVie(3);
 	list<Fantome>::iterator itFantome;
+	Set_Niveau(EASY);
 
-	if(Get_Niveau() == EASY)                           ///// Niveau : Easy
-    {
         const char terrain_defaut[17][21] = {
             "....................",
             "....................",
             "####################",
-            "#...../..##..../...#",
+            "#...../..##........#",
             "#.#####..##...####.#",
-            "#..../...##........#",
-            "#..../..../....//..|",
+            "#........##........#",
+            "#..................|",
             "#......#....#......#",
-            "#....*.#...##./....#",
+            "#....*.#...##......#",
             "#####..#....#..#####",
             "#......##...#......#",
-            "#......#....#../...#",
-            "#.../..........*...#",
-            "#......../....../..#",
-            "#./...#......#.....#",
+            "#......#....#......#",
+            "#..............*...#",
+            "#..................#",
+            "#.....#......#.....#",
             "#.....#......#.....#",
             "####################"
         };
@@ -102,31 +111,35 @@ bool Jeu::init()
         posPacmanY = 3;
 
         return true;
-        }
-    else                                         ///// Niveau : Hard
-    {
-        {
-        const char terrain_defaut[17][21] = {
+}
+
+bool Jeu::niveau2()             // Niveau 2
+{
+    int x, y;
+	Set_PointVie(3);
+	list<Fantome>::iterator itFantome;
+	Set_Niveau(HARD);
+         const char terrain_defaut[17][22] = {
             "....................",
             "....................",
             "####################",
-            "#...../..##..../.*.#",
-            "#.#####./##.//####.#",
-            "#./../.*.##...././.#",         ///// Augmenter le nombre de gommes
-            "#....//.../....//..|",
-            "#.././.#../.#..*...#",
-            "#..///.#...##./....#",
-            "#####..#.//.#..#####",
-            "#..//..##...#..*...#",
-            "#.//...#./..#../...#",
-            "#.../../..*..///...#",
-            "#......../....../..#",
-            "#./...#.../..#./...#",
-            "#...*.#....*.#.../.#",
-            "####################"
+            "#...../..##.....#/.#",
+            "#.###....##...###..#",
+            "#...#....##.../....#",
+            "#...../...//.......|",
+            "#.//...##...#..//..#",
+            "#../#*.#....#/..//.#",
+            "#####..#....#...#####",
+            "#......#..###...#..#",
+            "#......#....#.../..#",
+            "#..//....*.....*...#",
+            "#...//../..../../..#",
+            "#....##......##..//#",
+            "#.../.#.../..#./../#",
+            "#####################"
         };
 
-        largeur = 20;
+        largeur = 21;
         hauteur = 17;
 
         terrain = new Case[largeur*hauteur];
@@ -140,9 +153,10 @@ bool Jeu::init()
                 else if (terrain_defaut[y][x]=='/')
                     terrain[y*largeur+x] = GOMME;
                 else if (terrain_defaut[y][x]=='|')
-                    terrain[y*largeur+x] = BONUS;
+                    terrain[y*largeur+x] = PORTE;
+                else terrain[y*largeur+x] = BONUS;
 
-        fantomes.resize(7);       // Augmenter le nombre de fantomes
+        fantomes.resize(7);
 
         for (itFantome=fantomes.begin(); itFantome!=fantomes.end(); itFantome++)
         {
@@ -161,14 +175,11 @@ bool Jeu::init()
             y = rand()%hauteur;
         } while (terrain[y*largeur+x]!=VIDE);
 
-        posPacmanX = 3;
+        posPacmanX = 3;         // Position initial du PacMan
         posPacmanY = 3;
 
         return true;
-        }
-    }
 }
-
 void Jeu::evolue()
 {
     int testX, testY;
