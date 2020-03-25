@@ -46,10 +46,15 @@ class Jeu
 
     bool init();
     void evolue();
+    bool niveau2();      // Augmenter le niveau du jeu
 
     // Retourne les dimensions (en nombre de cases)
     int getNbCasesX() const;
     int getNbCasesY() const;
+
+    // Set Largeur et Hauteur du jeu
+    void set_Largeur(const int);
+    void set_Hauteur(const int);
 
     // Retourne la position du Pacman
     int getPacmanX() const;
