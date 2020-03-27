@@ -44,7 +44,7 @@ void Jeu::set_Hauteur(const int h)
     hauteur = h;
 }
 
-bool Jeu::init()             // Niveau 1
+bool Jeu::init()             // Niveau 1 (EASY Mode)
 {
 	int x, y;
 	Set_PointVie(3);
@@ -113,13 +113,13 @@ bool Jeu::init()             // Niveau 1
         return true;
 }
 
-bool Jeu::niveau2()             // Niveau 2
+bool Jeu::niveau2()             // Niveau 2 (Pour passer au niveau 2, il faut terminer le niveau 1)
 {
     int x, y;
 	Set_PointVie(3);
 	list<Fantome>::iterator itFantome;
 	Set_Niveau(HARD);
-         const char terrain_defaut[17][22] = {
+         const char terrain_defaut[17][21] = {
             "....................",
             "....................",
             "####################",
@@ -129,17 +129,17 @@ bool Jeu::niveau2()             // Niveau 2
             "#...../...//.......|",
             "#.//...##...#..//..#",
             "#../#*.#....#/..//.#",
-            "#####..#....#...#####",
+            "#####..#....#...####",
             "#......#..###...#..#",
             "#......#....#.../..#",
             "#..//....*.....*...#",
             "#...//../..../../..#",
             "#....##......##..//#",
             "#.../.#.../..#./../#",
-            "#####################"
+            "####################"
         };
 
-        largeur = 21;
+        largeur = 20;
         hauteur = 17;
 
         terrain = new Case[largeur*hauteur];
@@ -175,7 +175,7 @@ bool Jeu::niveau2()             // Niveau 2
             y = rand()%hauteur;
         } while (terrain[y*largeur+x]!=VIDE);
 
-        posPacmanX = 3;         // Position initial du PacMan
+        posPacmanX = 3;         // Position initial du PacMan pour l'instant
         posPacmanY = 3;
 
         return true;
@@ -301,8 +301,7 @@ void Jeu::Set_PointVie(const int a)
 
 int Jeu::Get_PointVie() const
 {
-    int Get_PointVie = PointVie;
-    return Get_PointVie;
+    return PointVie;
 }
 
 void Jeu::Set_NBGommes()
